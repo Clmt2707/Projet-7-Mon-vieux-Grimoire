@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const booksRoutes = require('./routes/book');
+const usersRoutes = require('./routes/users');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(express.json());
 
 
 app.use('/api/books', booksRoutes);
+app.use('/api/auth', usersRoutes);
 
 
 module.exports = app;
