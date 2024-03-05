@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../middlewares/multer');
+const auth = require('../middlewares/auth');
 
 const booksCtrl = require('../controllers/book');
 
-router.post('/', multer, booksCtrl.createBook);
-router.put('/:id',multer, booksCtrl.modifyBook);
-router.delete('/:id', booksCtrl.deleteBook);
+router.post('/', auth, multer, booksCtrl.createBook);
+router.get('/', booksCtrl.getAllBooks);
 router.get('/bestrating', booksCtrl.getBestRating);
 router.get('/:id', booksCtrl.getOneBook);
-router.get('/', booksCtrl.getAllBooks);
-
+router.put('/:id',auth, multer, booksCtrl.modifyBook);
+router.delete('/:id', auth, booksCtrl.deleteBook);
 
 
 

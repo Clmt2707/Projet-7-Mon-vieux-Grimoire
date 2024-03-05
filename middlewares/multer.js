@@ -4,6 +4,7 @@ const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/png': 'png',
     'image/jpeg': 'jpg',
+    'image/webp': 'webp',
 };
 
 
