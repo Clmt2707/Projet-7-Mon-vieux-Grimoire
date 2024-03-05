@@ -2,8 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/users');
+const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 exports.signup = (req, res, next) => {
+
+    if( !regexEmail.test(req.body.email)) {
+        return res.status(400).json({ message: 'Format email invalide !'});
+    }
 
     //Hachage du mdp
     bcrypt.hash(req.body.password, 10)

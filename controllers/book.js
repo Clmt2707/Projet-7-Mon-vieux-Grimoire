@@ -1,8 +1,7 @@
 const Book = require('../models/book');
 const fs = require('fs');
 const path = require('path');
-
-
+const auth = require('../middlewares/auth');
 //Création d'un book
 exports.createBook = (req, res, next) => {
     const bookData = JSON.parse(req.body.book);
@@ -34,14 +33,14 @@ exports.getAllBooks = (req, res, next) => {
 exports.getOneBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
         .then(book => res.status(200).json(book))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({ message: 'Livre introuvable' }));
 };
 
 //Modification d'un livre
 exports.modifyBook = (req, res, next) => {
     const bookData = req.file ? {
         ...JSON.parse(req.body.book),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.compressedFilename}`,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     } : { ...req.body };
     
     delete bookData._userId;
@@ -60,7 +59,7 @@ exports.modifyBook = (req, res, next) => {
                     });
                 }
 
-                Book.updateOne({ _id: req.params.id })
+                Book.updateOne({ _id: req.params.id }, { ...bookData, _id: req.params.id})
                     .then(() => {
                         res.status(200).json({ message: 'Livre modifié avec succès !'})
                     })
