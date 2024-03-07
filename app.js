@@ -7,11 +7,7 @@ const usersRoutes = require('./routes/users');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://clmtdbf:hd28KXLXAeS1lFOJ@cluster0.tqjrs2x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+mongoose.connect('mongodb+srv://clmtdbf:hd28KXLXAeS1lFOJ@cluster0.tqjrs2x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('Connexion à MongoDb réussie !'))
     .catch(() => console.log('Connexion à MongoDb échouée !'));
 
