@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
+const path = require('path')
+const cors = require('cors');
+
+
 
 const booksRoutes = require('./routes/book');
 const usersRoutes = require('./routes/users');
@@ -12,7 +15,7 @@ mongoose.connect('mongodb+srv://clmtdbf:hd28KXLXAeS1lFOJ@cluster0.tqjrs2x.mongod
     .catch(() => console.log('Connexion à MongoDb échouée !'));
 
 
-
+app.use(cors());
 //Middleware pour la gestion des CORS
 app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
 
 app.use('/api/auth', usersRoutes);
 app.use('/api/books', booksRoutes);
