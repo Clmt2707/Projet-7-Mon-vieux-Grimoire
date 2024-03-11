@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
         req.file.convertFilepath = req.file.path + '.webp';
 
         await sharp(req.file.path)
-        .resize(500, 500)
+        .resize(206, 260)
         .webp(90)
         .toFile(req.file.convertFilepath)
 
