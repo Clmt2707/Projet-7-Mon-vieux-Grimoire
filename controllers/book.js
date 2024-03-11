@@ -115,9 +115,8 @@ exports.getBestRating = (req, res, next) => {
 //Notation du livre
 exports.rateBook = (req, res, next) => {
     const { userId, rating } = req.body;
-    const user = req.body.userId;
 
-    if( user !== req.auth.userId) {
+    if( req.body.userId !== req.auth.userId) {
         return res.status(403).json({ message: 'Unauthorized !'});
     }
 
@@ -125,7 +124,7 @@ exports.rateBook = (req, res, next) => {
         return res.status(400).json({ message : 'La note doit être comprise entre 0 et 5 !'});
     }
 
-    Book.findById({_id: req.params.id})
+    Book.findOne({_id: req.params.id})
         .then(book => {
             if(!book) {
                 return res.status(404).json({ message: 'Livre non trouvé !'});
