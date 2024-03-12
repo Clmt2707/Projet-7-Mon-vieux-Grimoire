@@ -36,16 +36,6 @@ exports.getOneBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
         .then(book => res.status(200).json(book))
         .catch(error => res.status(400).json({ message: 'Livre introuvable' }));
-    /*Book.findOne({ _id: req.params.id })
-        .then((book) => {
-            if ( book.userId !== req.auth.userId ) {
-                return res.status(403).json({ message: '403: unauthorized !'});
-            }
-            res.status(200).json(book);
-        })
-        .catch(error => {
-            res.status(400).json({ error });
-        });*/
 };
 
 //Modification d'un livre
