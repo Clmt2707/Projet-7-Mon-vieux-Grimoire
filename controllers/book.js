@@ -40,14 +40,13 @@ exports.getOneBook = (req, res, next) => {
 
 //Modification d'un livre
 exports.modifyBook = (req, res, next) => {
-    
+
     Book.findOne({ _id: req.params.id })
         .then((book) => {
             if (!book) {
                 return res.status(404).json({ message: 'Book not found' });
             } 
-
-            if (book.userId != req.auth.userId) {
+            if (book.userId !== req.auth.userId) {
                 res.status(403).json({ message : '403: unauthorized request'});
             }
             const bookData = req.file ? {
@@ -114,8 +113,9 @@ exports.getBestRating = (req, res, next) => {
 
 //Notation du livre
 exports.rateBook = (req, res, next) => {
-    const { userId, rating } = req.body;
-
+    const userId = req.auth.userId;
+    const { rating } = req.body;
+    
     if( req.body.userId !== req.auth.userId) {
         return res.status(403).json({ message: 'Unauthorized !'});
     }
@@ -124,33 +124,32 @@ exports.rateBook = (req, res, next) => {
         return res.status(400).json({ message : 'La note doit être comprise entre 0 et 5 !'});
     }
 
-    Book.findOne({_id: req.params.id})
-        .then(book => {
+    Book.findByIdAndUpdate(
+        {_id: req.params.id},
+        {
+            $push: { ratings: { userId, grade: rating }},
+        },
+        { new: true }
+        )
+        .then((book) => {
             if(!book) {
-                return res.status(404).json({ message: 'Livre non trouvé !'});
+                return res.satus(404).json({ message: 'Livre non trouvé !'});
             }
-            const alreadyRated = book.ratings.find(rating => rating.userId === userId );
-            if (alreadyRated) {
-                return res.status(400).json({ message: 'Livre déjà noté par utilisateur !'});
-            }
-
-            //Ajout de la note à la rating list
-            book.ratings.push({ userId, grade: rating });
-
+            
             const totalRatings = book.ratings.length;
             const sommeRatings = book.ratings.reduce((sum, rating) => sum + rating.grade, 0);
-            const averageRating = sommeRatings / totalRatings;
+            const averageRating = parseFloat((sommeRatings / totalRatings).toFixed(2));
             book.averageRating = averageRating;
 
             book.save()
-                .then(updatedBook => {
-                    res.status(200).json({ updatedBook });
+                .then(() => {
+                    res.status(200).json( book );
                 })
-                .catch(error => { 
+                .catch(error => {
                     res.status(500).json({ error });
-                });
-        }) 
+                 });
+        })
         .catch(error => {
             res.status(500).json({ error });
         });
-};
+}
