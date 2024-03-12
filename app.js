@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 require('dotenv').config();
 
@@ -15,6 +16,11 @@ mongoose.connect('mongodb+srv://' + process.env.DB_username + ':' + process.env.
     .then(() => console.log('Connexion à MongoDb réussie !'))
     .catch(() => console.log('Connexion à MongoDb échouée !'));
 
+const limiter = rateLimit({
+    windowMS: 60 * 60 * 1000,
+    max: 100,
+    message: 'Trop de requêtes depuis cette adresse IP, rééssayez plus tard.'
+});
 
 app.use(cors());
 //Middleware pour la gestion des CORS
@@ -26,6 +32,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use(limiter);
 
 app.use(helmet({
     crossOriginResourcePolicy: false,
