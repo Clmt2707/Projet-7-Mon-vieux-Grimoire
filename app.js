@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const cors = require('cors');
+/*const cors = require('cors');*/
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
@@ -22,7 +22,7 @@ const limiter = rateLimit({
     message: 'Trop de requêtes depuis cette adresse IP, rééssayez plus tard.'
 });
 
-app.use(cors());
+/*app.use(cors());*/
 //Middleware pour la gestion des CORS
 app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Origin', '*');
