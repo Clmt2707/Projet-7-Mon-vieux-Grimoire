@@ -35,7 +35,7 @@ exports.getAllBooks = (req, res, next) => {
 exports.getOneBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id })
         .then(book => res.status(200).json(book))
-        .catch(error => res.status(400).json({ message: 'Livre introuvable' }));
+        .catch(error => res.status(400).json({ error }));
 };
 
 //Modification d'un livre
@@ -47,7 +47,7 @@ exports.modifyBook = (req, res, next) => {
                 return res.status(404).json({ message: 'Book not found' });
             } 
             if (book.userId !== req.auth.userId) {
-                res.status(403).json({ message : '403: unauthorized request'});
+                return res.status(403).json({ message : '403: unauthorized request'});
             }
             const bookData = req.file ? {
                 ...JSON.parse(req.body.book),

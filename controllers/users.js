@@ -5,11 +5,16 @@ require('dotenv').config();
 
 const User = require('../models/users');
 const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const regexPassword = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/;
 
 exports.signup = (req, res, next) => {
 
     if( !regexEmail.test(req.body.email)) {
         return res.status(400).json({ message: 'Format email invalide !'});
+    }
+
+    if( !regexPassword.test(req.body.password) ){
+        return res.status(400).json({ message: 'Format mot de passe invalide !'});
     }
 
     //Hachage du mdp
