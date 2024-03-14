@@ -41,17 +41,20 @@ exports.login = (req, res, next) => {
                 .then(valid => {
                     if (!valid) {
                         return res.status(401).json({ message: 'Paire login/mdp incorrecte !'});
-                    } 
-                    res.status(200).json({
-                        userId: user._id,
-                        token: jwt.sign(
-                            { userId: user._id },
-                            process.env.SECRET_TOKEN,
-                            { expiresIn: '24h' }
-                        )
-                    });
+                    } else {
+                        res.status(200).json({ 
+                            userId: user._id,
+                            token: jwt.sign(
+                                { userId: user._id},
+                                process.env.SECRET_TOKEN,
+                                { expiresIn: '24h'}
+                            )
+                        });
+                    }
                 })
                 .catch(error => res.status(500).json({ error }));
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => {
+            res.status(500).json({ error });
+        })
 };
