@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-/*const cors = require('cors');*/
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
@@ -22,7 +21,6 @@ const limiter = rateLimit({
     message: 'Trop de requêtes depuis cette adresse IP, rééssayez plus tard.'
 });
 
-/*app.use(cors());*/
 //Middleware pour la gestion des CORS
 app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Origin', '*');
@@ -44,5 +42,10 @@ app.use('/api/auth', usersRoutes);
 app.use('/api/books', booksRoutes);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use((err, req, res, next) => {
+    console.error(err, stack);
+    res.status(500).send('UNe erreur est survenue sur le serveur.');
+});
 
 module.exports = app;
